@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,22 +14,25 @@ namespace ConsoleApplication1
             do
             {
                 uint[] numbers = GetThreeUints();   // Получить три числа
-
-                Console.WriteLine("Наименьшее число: " + numbers.Min());    // Вывести наименьшее
-
-                for (int i = 0; i < numbers.Length; i++)
+                if (numbers.Length != 0)
                 {
-                    uint[] fibonachiLine = GetFibonachiLine(numbers[i]);    // Получить последовательность Фибоначи
-                    
-                    string fibStr = string.Empty;
-                    for (int j = 0; j < fibonachiLine.Length; j++)          // Преобразовать посл-ть в строку чисел, разделенных пробелами
+                    Console.WriteLine("Наименьшее число: " + numbers.Min());    // Вывести наименьшее
+
+                    for (int i = 0; i < numbers.Length; i++)
                     {
-                        fibStr = fibStr + fibonachiLine[j].ToString() + " ";
+                        List<uint> fibonachiLine = GetFibonachiLine(numbers[i]);    // Получить последовательность Фибоначи
+
+                        if (fibonachiLine.Count != 0)           // Вывести последовательность на экран
+                        {
+                            for (int j = 0; j < fibonachiLine.Count; j++)
+                                Console.Write(fibonachiLine[j].ToString() + " ");
+                            Console.Write('\n');
+                        }
                     }
-                    if (fibStr != string.Empty)
-                        Console.WriteLine(fibStr);      // Вывести на экран
+                    Console.WriteLine("Чтобы продолжить, введите любой символ. Для выхода введите q.");
                 }
-                Console.WriteLine("Чтобы продолжить, введите любой символ. Для выхода введите q.");
+                else
+                    Console.WriteLine("Неудачная попытка ввода! Чтобы продолжить, введите любой символ. Для выхода введите q.");
             }
             while (Console.ReadLine() != "q");
         }
@@ -39,40 +43,48 @@ namespace ConsoleApplication1
         /// <returns> Массив значений </returns>
         static uint[] GetThreeUints()
         {
-            while (true)
+            int uAttempts;
+            if (int.TryParse(ConfigurationManager.AppSettings["UserAttempts"], out uAttempts))
             {
-                Console.WriteLine("Введите три целых неотрицательных числа.");
-                string digitsLine = Console.ReadLine();
-                string[] digitsArray = ParseString(digitsLine);     // Получить подстроки с числами
+                while (uAttempts-- != 0)
+                {
+                    Console.WriteLine("Введите три целых неотрицательных числа.");
+                    string digitsLine = Console.ReadLine();
+                    
+                    var digitsArray = from item in digitsLine.Split(' ')
+                                      where item != string.Empty
+                                      select item;
 
-                if (digitsArray.Length == 3)
-                {
-                    uint[] numsArray = new uint[3];
-                    bool parseIsBad = false;
-                    for (int i = 0; i < digitsArray.Length; i++)    // Попробовать отпарсить полученные значения
+                    if (digitsArray.Count() == 3)
                     {
-                        uint digit;
-                        if (uint.TryParse(digitsArray[i], out digit))
+                        uint[] numsArray = new uint[3];
+                        bool parseIsBad = false;
+                        for (int i = 0; i < digitsArray.Count(); i++)    // Попробовать отпарсить полученные значения
                         {
-                            numsArray[i] = digit;
+                            uint digit;
+                            if (uint.TryParse(digitsArray.ElementAt(i), out digit))
+                            {
+                                numsArray[i] = digit;
+                            }
+                            else
+                            {
+                                Console.WriteLine("Число " + digitsArray.ElementAt(i) + " введено неверно.");
+                                parseIsBad = true;
+                                break;
+                            }
                         }
-                        else
+                        if (!parseIsBad)
                         {
-                            Console.WriteLine("Число " + digitsArray[i] + " введено неверно.");
-                            parseIsBad = true;
-                            break;
+                            return numsArray;       // При успешном парсинге вернуть результат
                         }
                     }
-                    if (!parseIsBad)
+                    else
                     {
-                        return numsArray;       // При успешном парсинге вернуть результат
+                        Console.WriteLine("Количество чисел не равно трем!");
                     }
-                }
-                else
-                {
-                    Console.WriteLine("Количество чисел не равно трем!");
                 }
             }
+            return Array.Empty<uint>();
         }
 
         /// <summary>
@@ -113,7 +125,7 @@ namespace ConsoleApplication1
         /// </summary>
         /// <param name="lessThan"></param>
         /// <returns></returns>
-        static uint[] GetFibonachiLine(uint lessThan)
+        static List<uint> GetFibonachiLine(uint lessThan)
         {
             uint fibIndx = 0;
             List<uint> fibList = new List<uint>();
@@ -121,7 +133,7 @@ namespace ConsoleApplication1
 
             while ((fibItem = GetFibonachiNum(fibIndx++)) < lessThan) // Получать и сохранять числа из посл-ти Фибоначи, пока они меньше значения параметра
                 fibList.Add(fibItem);
-            return fibList.ToArray();
+            return fibList;
         }
 
         /// <summary>
