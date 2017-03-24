@@ -10,28 +10,39 @@ namespace HomeWork2
     {
         static void Main(string[] args)
         {
-            Console.Write("Введите целое положительное число: ");
-            //string numAsStr = Console.ReadLine();
-
-            //uint number;
-            if (!uint.TryParse(Console.ReadLine(), out uint number))
+            do
             {
-                Console.WriteLine("Введено некорректное значение!");
-                Console.ReadLine();
-                return;
+                Console.Write("Введите целое положительное число: ");
+
+                if (!uint.TryParse(Console.ReadLine(), out uint number))
+                {
+                    Console.WriteLine("Введено некорректное значение!");
+                    Console.ReadLine();
+                    return;
+                }
+                int[] randomArray = new int[number];
+
+                Console.Write("Произвольные числа: ");
+                Random randomGen = new Random();
+
+                for (int i = 0; i < randomArray.Length; i++)    // Заполнить массив случайными числами от -100 до 100
+                {
+                    randomArray[i] = randomGen.Next(-100, 100);
+                    Console.Write(randomArray[i] + " ");
+                }
+                Console.Write('\n');
+
+                SortArrWithBubbleSort(randomArray);
+                Console.Write("Отсортированный массив: ");  // Вывести отсортированный массив
+                foreach (var randomSbyte in randomArray)
+                    Console.Write(randomSbyte + " ");
+                Console.Write('\n');
+
+                Console.WriteLine("Чтобы продолжить, введите любой символ. Для выхода введите q.");
             }
-            int[] randomArray = new int[number];
+            while (Console.ReadLine() != "q");
 
-            Console.Write("Произвольные числа: ");
-            Random randomGen = new Random();
-
-            for (int i = 0; i < randomArray.Length; i++)
-            {
-                randomArray[i] = randomGen.Next(-100, 100);
-                Console.Write(randomArray[i] + " ");
-            }
-            Console.Write('\n');
-
+            #region Уточнить
             /*byte[] randomBytes = new byte[number];
             randomGen.NextBytes(randomBytes);
             var randomSbytes = randomBytes.Cast<sbyte>();
@@ -39,36 +50,45 @@ namespace HomeWork2
             foreach (var randomSbyte in randomSbytes)
                 Console.Write(randomSbyte + " ");
             Console.Write('\n');*/
-
-            SortArrWithBubbleSort(randomArray);
-            Console.Write("Отсортированный массив: ");
-            foreach (var randomSbyte in randomArray)
-                Console.Write(randomSbyte + " ");
-            Console.Write('\n');
-
-            Console.ReadLine();
+            #endregion
         }
 
+        /// <summary>
+        /// Метод пузырьковой сортировки массива
+        /// </summary>
+        /// <typeparam name="T"> Тип передаваемого массива должен реализовывать <see cref="IComparable{T}"/></typeparam>
+        /// <param name="inputArr"> Сортируемый массив </param>
         static void SortArrWithBubbleSort<T>(T[] inputArr) where T : IComparable<T>
         {
-            bool wasSorted;
+            int cnt = inputArr.Length - 1;  // Счетчик внутреннего цикла
             do
             {
-                wasSorted = false;
-                for (int i = 0; i < inputArr.Length - 1; i++)
+                int newCnt = 0;
+                for (int i = 0; i < cnt; i++)
                 {
 
-                    if (inputArr[i].CompareTo(inputArr[i + 1]) > 0)
+                    if (inputArr[i].CompareTo(inputArr[i + 1]) > 0)     // Если младший больше старшего эл-та
                     {
-                        T tmp = inputArr[i + 1];
-                        inputArr[i + 1] = inputArr[i];
-                        inputArr[i] = tmp;
-                        wasSorted = true;
+                        Swap(ref inputArr[i], ref inputArr[i + 1]);     // Поменять их местами и присвоить новый счетчик цикла
+                        newCnt = i;
                     }
-
                 }
+                cnt = newCnt;
             }
-            while (wasSorted);
+            while (cnt != 0);   // Цикл, пока не будет произведена последняя сортировка
+        }
+
+        /// <summary>
+        /// Метод, меняющий местами два значния, переданные по ссылке
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="firstItem"></param>
+        /// <param name="secItem"></param>
+        static void Swap<T>(ref T firstItem, ref T secItem)
+        {
+            var tmp = firstItem;
+            firstItem = secItem;
+            secItem = tmp;
         }
     }
 }
