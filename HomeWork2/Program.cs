@@ -13,8 +13,8 @@ namespace HomeWork2
             do
             {
                 Console.Write("Введите целое положительное число: ");
-
-                if (!uint.TryParse(Console.ReadLine(), out uint number))
+                uint number;
+                if (!uint.TryParse(Console.ReadLine(), out number))
                 {
                     Console.WriteLine("Введено некорректное значение!");
                     Console.ReadLine();
