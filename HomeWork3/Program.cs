@@ -15,30 +15,45 @@ namespace HomeWork3
                 Console.Write("Введите строку: ");
                 StringHandler strHandler = new StringHandler(Console.ReadLine());
                 Console.WriteLine("Строка " + (strHandler.IsStrPalindrome() ? "является" : "не является") + " палиндромом.");
-                Console.WriteLine("В строке " + strHandler.NumberOfWords + " слов.");
+                Console.WriteLine("Число слов в строке: " + strHandler.NumberOfWords);
                 Console.WriteLine("Перевернутая строка: " + strHandler.GetReversedString());
                 Console.WriteLine("Чтобы продолжить, введите любой символ. Для выхода введите q.");
             }
             while (Console.ReadLine() != "q");
         }
 
+        /// <summary>
+        /// Класс обработчик
+        /// </summary>
         class StringHandler
         {
             public StringHandler(string initialStr)
             {
                 CurrentString = RemoveExtraSpaces(initialStr);
-                strForPalindrome = initialStr.RemoveSigns('.', ',', '!', '?', ' ');
-                strForPalindrome = strForPalindrome.ToLower();
+                strForPalindrome = initialStr.RemoveSigns('.', ',', '!', '?', ' ');     // Для строки, по которой определяется является ли строка палиндромом, удалить знаки препинания и пробелы
+                strForPalindrome = strForPalindrome.ToLower();                          // и привести все буквы к нижнему регистру
             }
 
             #region Fields
+            /// <summary>
+            /// Текущая строка
+            /// </summary>
             private string CurrentString;
 
+            /// <summary>
+            /// Число слов в строке
+            /// </summary>
             private int wordsInString;
 
+            /// <summary>
+            /// Строка для определения, является ли исходная палиндромом
+            /// </summary>
             private string strForPalindrome;
             #endregion
 
+            /// <summary>
+            /// Свойство, которое возвращает число слов в строке
+            /// </summary>
             public int NumberOfWords
             {
                 get { return wordsInString; }
@@ -46,6 +61,10 @@ namespace HomeWork3
 
             #region Methods
             
+            /// <summary>
+            /// Метод определения, является ли строка палиндромом
+            /// </summary>
+            /// <returns> Признак, является ли строка палиндромом </returns>
             public bool IsStrPalindrome()
             {
                 bool isPalindrom = true;
@@ -60,6 +79,10 @@ namespace HomeWork3
                 return isPalindrom;
             }
 
+            /// <summary>
+            /// Перевернуть строку задом на перед
+            /// </summary>
+            /// <returns></returns>
             public string GetReversedString()
             {
                 var charArray = CurrentString.ToCharArray();
@@ -72,12 +95,17 @@ namespace HomeWork3
                 return new string(charArray);
             }
 
+            /// <summary>
+            /// Удалить лишние пробелы между словами
+            /// </summary>
+            /// <param name="str"> Строка </param>
+            /// <returns> Строка без лишних пробелов </returns>
             private string RemoveExtraSpaces(string str)
             {
                 var wordsArr = str.Split(new char[] {' '}, StringSplitOptions.RemoveEmptyEntries);
-                wordsInString = wordsArr.Length;
+                wordsInString = wordsArr.Length;        // Сохранить число слов в строке
                 
-                string newStr = string.Empty;
+                string newStr = string.Empty;       // Создать новую строку без лишних пробелов между словами
                 foreach (var word in wordsArr)
                     newStr += word + " ";
                 return newStr;
@@ -86,8 +114,17 @@ namespace HomeWork3
         }
     }
 
+    /// <summary>
+    /// Методы расширения для работы со строками
+    /// </summary>
     static class HomeWork3Extention
     {
+        /// <summary>
+        /// Удалить указанный символ
+        /// </summary>
+        /// <param name="str"> Исходная строка </param>
+        /// <param name="sign"> Удаляемый символ </param>
+        /// <returns> Строка без указанного символа </returns>
         public static string RemoveSign(this string str, char sign)
         {
             string temp = string.Copy(str);
@@ -105,6 +142,12 @@ namespace HomeWork3
             return temp;
         }
 
+        /// <summary>
+        /// Удалить несколько знаков из строки
+        /// </summary>
+        /// <param name="str"> Исходная строка </param>
+        /// <param name="signs"> Удаляемые символы </param>
+        /// <returns> Строка без указанных символов </returns>
         public static string RemoveSigns(this string str, params char[] signs)
         {
             string tempStr = string.Copy(str);
