@@ -9,7 +9,9 @@ namespace HomeWork4
     class Circle : Sector
     {
         public Circle(double radius) : base(radius, 2 * Math.PI, "Круг")
-        { }
+        {
+            perimeterOfShape = archLength;
+        }
     }
 
     class Sector : Shape
@@ -20,7 +22,13 @@ namespace HomeWork4
         protected Sector(double radius, double angle, string shapeName) : base(shapeName)
         {
             areaOfShape = angle * radius * radius / 2;
-            perimeterOfShape = angle * radius + 2 * radius;
+            archLength = angle * radius;
+            perimeterOfShape = archLength + 2 * radius;
         }
+
+        /// <summary>
+        /// Длина дуги окружности сектора
+        /// </summary>
+        protected double archLength;
     }
 }

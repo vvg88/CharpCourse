@@ -18,15 +18,7 @@ namespace HomeWork4
             Vector sideAB = vertexB - vertexA;      // Получить стороны треугольника
             Vector sideAC = vertexC - vertexA;
             Vector sideBC = vertexC - vertexB;
-
-            Console.WriteLine($"Точка А({vertexA.X}, {vertexA.Y})");
-            Console.WriteLine($"Точка B({vertexB.X}, {vertexB.Y})");
-            Console.WriteLine($"Точка C({vertexC.X}, {vertexC.Y})");
-
-            Console.WriteLine($"Вектор АB({sideAB.X}, {sideAB.Y})");
-            Console.WriteLine($"Вектор AC({sideAC.X}, {sideAC.Y})");
-            Console.WriteLine($"Вектор BC({sideBC.X}, {sideBC.Y})");
-
+            
             perimeterOfShape = sideAB.Length + sideAC.Length + sideBC.Length;
 
             // Вычислить площадь треугольника по формуле Герона
