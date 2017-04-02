@@ -6,14 +6,6 @@ using System.Threading.Tasks;
 
 namespace HomeWork4
 {
-    class Circle : Sector
-    {
-        public Circle(double radius) : base(radius, 2 * Math.PI, "Круг")
-        {
-            perimeterOfShape = archLength;
-        }
-    }
-
     class Sector : Shape
     {
         public Sector(double radius, double angle) : this(radius, angle, "Сектор")
@@ -30,5 +22,13 @@ namespace HomeWork4
         /// Длина дуги окружности сектора
         /// </summary>
         protected double archLength;
+    }
+
+    class Circle : Sector
+    {
+        public Circle(double radius) : base(radius, 2 * Math.PI, "Круг")
+        {
+            perimeterOfShape = archLength;
+        }
     }
 }

@@ -14,9 +14,7 @@ namespace HomeWork4
         }
 
         protected string nameOfShape;
-
         protected double areaOfShape;
-
         protected double perimeterOfShape;
 
         public virtual string GetShapeName()
