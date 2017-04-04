@@ -8,18 +8,16 @@ namespace HomeWork5
 {
     class Door : Detail, IDoor
     {
-        public Door(uint number, double weight)
+        public Door(uint number, double weight) : base(weight, "Дверь")
         {
-            Name = "Дверь";
-            Weight = weight;
             Number = number;
         }
 
-        public override double Weight { get; protected set; }
-        public override string Name { get; protected set; }
-
         public uint Number { get; private set; }
 
+        /// <summary>
+        /// Признак открытия двери
+        /// </summary>
         private bool isOpened;
 
         public void Open(string carModel)

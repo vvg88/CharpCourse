@@ -6,16 +6,13 @@ using System.Threading.Tasks;
 
 namespace HomeWork5
 {
+    /// <summary>
+    /// Класс рама
+    /// </summary>
     class Body : Detail, IRotatable, IDoor
     {
-        public Body(double weight)
-        {
-            Name = "Рама";
-            Weight = weight;
-        }
-
-        public override double Weight { get; protected set; }
-        public override string Name { get; protected set; }
+        public Body(double weight) : base (weight, "Рама")
+        { }
 
         public void Move(string carModel)
         {
