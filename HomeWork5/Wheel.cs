@@ -8,15 +8,10 @@ namespace HomeWork5
 {
     class Wheel : Detail, IRotatable
     {
-        public Wheel(uint number, double weight)
+        public Wheel(uint number, double weight) : base(weight, "Колесо")
         {
-            Name = "Колесо";
-            Weight = weight;
             Number = number;
         }
-
-        public override double Weight { get; protected set; }
-        public override string Name { get; protected set; }
 
         public uint Number { get; private set; }
 
