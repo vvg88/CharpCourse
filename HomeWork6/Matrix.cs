@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -20,7 +21,7 @@ namespace HomeWork6
             RowsNum = inputMatrix.GetLength(0);
             ColumnsNum = inputMatrix.GetLength(1);
             matrix = new double[RowsNum, ColumnsNum];
-            inputMatrix.CopyTo(matrix, 0);
+            Array.Copy(inputMatrix, matrix, inputMatrix.Length);
         }
 
         public Matrix GetTranspose()
@@ -31,6 +32,22 @@ namespace HomeWork6
         public double GetDeterminant()
         {
             throw new NotImplementedException();
+        }
+
+        public override string ToString()
+        {
+            StringBuilder matrixSb = new StringBuilder();
+
+            for (int i = 0; i < RowsNum; i++)
+            {
+                for (int j = 0; j < ColumnsNum; j++)
+                {
+                    matrixSb.Append(matrix[i, j] + " ");
+                }
+                matrixSb.Append('\n');
+            }
+
+            return matrixSb.ToString();
         }
 
         /// <summary>
@@ -53,25 +70,61 @@ namespace HomeWork6
             }
         }
 
+        #region Operators
+
         public static Matrix operator +(Matrix leftOp, Matrix rightOp)
         {
+            if ((leftOp.RowsNum != rightOp.RowsNum) || (leftOp.ColumnsNum != rightOp.ColumnsNum))
+                throw new ArgumentException("Размеры матриц не совпадают!");
 
-            throw new NotImplementedException();
+            double[,] resultMatrix = new double[leftOp.RowsNum, leftOp.ColumnsNum];
+            for (int i = 0; i < leftOp.RowsNum; i++)
+                for (int j = 0; j < leftOp.ColumnsNum; j++)
+                    resultMatrix[i, j] = leftOp[i, j] + rightOp[i, j];
+
+            return new Matrix(resultMatrix);
         }
 
         public static Matrix operator +(Matrix leftOp, double rightOp)
         {
-            throw new NotImplementedException();
+            double[,] resultMatrix = new double[leftOp.RowsNum, leftOp.ColumnsNum];
+
+            for (int i = 0; i < leftOp.RowsNum; i++)
+                for (int j = 0; j < leftOp.ColumnsNum; j++)
+                    resultMatrix[i, j] = leftOp[i, j] + rightOp;
+
+            return new Matrix(resultMatrix);
         }
 
         public static Matrix operator *(Matrix leftOp, Matrix rightOp)
         {
-            throw new NotImplementedException();
+            if (leftOp.ColumnsNum != rightOp.RowsNum)
+                throw new ArgumentException("Число столбцов множимого не совпадает с числом строк множителя!");
+
+            double[,] resultMatrix = new double[leftOp.RowsNum, rightOp.ColumnsNum];
+            for (int m = 0; m < leftOp.RowsNum; m++)
+            {
+                for (int k = 0; k < rightOp.ColumnsNum; k++)
+                {
+                    for (int i = 0; i < leftOp.ColumnsNum; i++)
+                        resultMatrix[m, k] += leftOp[m, i] + rightOp[i, k];
+                }
+            }
+
+            return new Matrix(resultMatrix);
         }
 
         public static Matrix operator *(Matrix leftOp, double rightOp)
         {
-            throw new NotImplementedException();
+            double[,] resultMatrix = new double[leftOp.RowsNum, leftOp.ColumnsNum];
+
+            for (int i = 0; i < leftOp.RowsNum; i++)
+                for (int j = 0; j < leftOp.ColumnsNum; j++)
+                    resultMatrix[i, j] = leftOp[i, j] * rightOp;
+
+            return new Matrix(resultMatrix);
         }
+
+        #endregion
     }
 }
