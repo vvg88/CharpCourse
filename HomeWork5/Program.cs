@@ -4,6 +4,7 @@ using System.Configuration;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Utils;
 
 namespace HomeWork5
 {
@@ -24,10 +25,10 @@ namespace HomeWork5
             string carModelName = Console.ReadLine();
 
             uint carWheelsNum;
-            if (TryGetUint(userFaildAttempts, "Введите число колес автомобиля: ", out carWheelsNum))
+            if (Utils.Utils.TryGetUint(userFaildAttempts, "Введите число колес автомобиля: ", out carWheelsNum))
             {
                 uint carDoorsNum;
-                if (TryGetUint(userFaildAttempts, "Введите число дверей автомобиля: ", out carDoorsNum))
+                if (Utils.Utils.TryGetUint(userFaildAttempts, "Введите число дверей автомобиля: ", out carDoorsNum))
                 {
                     Car car = new Car(carModelName, carWheelsNum, carDoorsNum);
                     do
@@ -43,7 +44,7 @@ namespace HomeWork5
                                 break;
                             case "O":
                                 uint doorNum;
-                                if (TryGetUint(userFaildAttempts, "Введите номер двери или 0 для рамы: ", out doorNum))
+                                if (Utils.Utils.TryGetUint(userFaildAttempts, "Введите номер двери или 0 для рамы: ", out doorNum))
                                 {
                                     IDoor openableDetail = car.carDetailsArray.Where(detail => detail is IDoor)
                                                               .Cast<IDoor>()
@@ -66,31 +67,6 @@ namespace HomeWork5
                 }
             }
             Console.ReadLine();
-        }
-
-        /// <summary>
-        /// Попытаться получить uint с консоли
-        /// </summary>
-        /// <param name="userAttempts"> Число неудачных попыток пользователя </param>
-        /// <param name="message"> Сообщение о запросе </param>
-        /// <param name="inputNumber"> Введенное значение </param>
-        /// <returns> Результат ввода </returns>
-        static bool TryGetUint(uint userAttempts, string message, out uint inputNumber)
-        {
-            inputNumber = 0;
-            bool inputCorrect = false;
-            do
-            {
-                Console.Write(message);
-                if (uint.TryParse(Console.ReadLine(), out inputNumber))
-                {
-                    inputCorrect = true;
-                    break;
-                }
-                Console.WriteLine("Введено неверное значение! Попробуйте еще раз.");
-            }
-            while (userAttempts-- != 0);
-            return inputCorrect;
         }
     }
 }
