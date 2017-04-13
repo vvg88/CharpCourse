@@ -77,8 +77,13 @@ namespace HomeWork6
 
         protected override Matrix multiplyBy(double number)
         {
-
-            return 
+            var row = new double[firstRow.Length];
+            firstRow.CopyTo(row, 0);
+            var col = new double[firstColumn.Length - 1];
+            firstColumn.CopyTo(col, 1);
+            Array.ForEach(row, item => item *= number);
+            Array.ForEach(col, item => item *= number);
+            return new ToeplitzMatrix(row, col);
         }
     }
 }
