@@ -10,7 +10,7 @@ namespace HomeWork6
     {
         private double[] firstRow;
         private double[] firstColumn;
-
+        
         /// <summary>
         /// Если первый элемент строки и столбца совпадают, то их длины должны быть одинаковыми.
         /// В противном случае длина столбца должны быть на 1 меньше.
@@ -73,6 +73,12 @@ namespace HomeWork6
                 }
             }
             return new Matrix(resultMatrix);
+        }
+
+        protected override Matrix multiplyBy(double number)
+        {
+
+            return 
         }
     }
 }

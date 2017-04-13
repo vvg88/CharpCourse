@@ -100,6 +100,40 @@ namespace HomeWork6
                         resultMatrix[m, k] += this[m, i] * rightMtrx[i, k];
                 }
             }
+            return new Matrix(resultMatrix);
+        }
+
+        protected virtual Matrix multiplyBy(double number)
+        {
+            double[,] resultMatrix = new double[RowsNum, ColumnsNum];
+
+            for (int i = 0; i < RowsNum; i++)
+                for (int j = 0; j < ColumnsNum; j++)
+                    resultMatrix[i, j] = this[i, j] * number;
+
+            return new Matrix(resultMatrix);
+        }
+
+        protected virtual Matrix addNumber(double number)
+        {
+            double[,] resultMatrix = new double[this.RowsNum, this.ColumnsNum];
+
+            for (int i = 0; i < this.RowsNum; i++)
+                for (int j = 0; j < this.ColumnsNum; j++)
+                    resultMatrix[i, j] = this[i, j] + number;
+
+            return new Matrix(resultMatrix);
+        }
+
+        protected virtual Matrix sumWith(Matrix rightOp)
+        {
+            if ((RowsNum != rightOp.RowsNum) || (ColumnsNum != rightOp.ColumnsNum))
+                throw new ArgumentException("Размеры матриц не совпадают!");
+
+            double[,] resultMatrix = new double[RowsNum, ColumnsNum];
+            for (int i = 0; i < RowsNum; i++)
+                for (int j = 0; j < ColumnsNum; j++)
+                    resultMatrix[i, j] = this[i, j] + rightOp[i, j];
 
             return new Matrix(resultMatrix);
         }
@@ -137,26 +171,12 @@ namespace HomeWork6
 
         public static Matrix operator +(Matrix leftOp, Matrix rightOp)
         {
-            if ((leftOp.RowsNum != rightOp.RowsNum) || (leftOp.ColumnsNum != rightOp.ColumnsNum))
-                throw new ArgumentException("Размеры матриц не совпадают!");
-
-            double[,] resultMatrix = new double[leftOp.RowsNum, leftOp.ColumnsNum];
-            for (int i = 0; i < leftOp.RowsNum; i++)
-                for (int j = 0; j < leftOp.ColumnsNum; j++)
-                    resultMatrix[i, j] = leftOp[i, j] + rightOp[i, j];
-
-            return new Matrix(resultMatrix);
+            return leftOp.sumWith(rightOp);
         }
 
         public static Matrix operator +(Matrix leftOp, double rightOp)
         {
-            double[,] resultMatrix = new double[leftOp.RowsNum, leftOp.ColumnsNum];
-
-            for (int i = 0; i < leftOp.RowsNum; i++)
-                for (int j = 0; j < leftOp.ColumnsNum; j++)
-                    resultMatrix[i, j] = leftOp[i, j] + rightOp;
-
-            return new Matrix(resultMatrix);
+            return leftOp.addNumber(rightOp);
         }
 
         public static Matrix operator *(Matrix leftOp, Matrix rightOp)
@@ -166,13 +186,7 @@ namespace HomeWork6
 
         public static Matrix operator *(Matrix leftOp, double rightOp)
         {
-            double[,] resultMatrix = new double[leftOp.RowsNum, leftOp.ColumnsNum];
-
-            for (int i = 0; i < leftOp.RowsNum; i++)
-                for (int j = 0; j < leftOp.ColumnsNum; j++)
-                    resultMatrix[i, j] = leftOp[i, j] * rightOp;
-
-            return new Matrix(resultMatrix);
+            return leftOp.multiplyBy(rightOp);
         }
 
         #endregion
