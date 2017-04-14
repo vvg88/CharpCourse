@@ -9,13 +9,16 @@ namespace HomeWork7
     class Account
     {
         public double CurrentBalance { get; private set; }
-
         public int ID { get; }
+        public Client Owner { get; }
 
-        public Account(double balance, int id)
+        private static Random idRandomiser = new Random();
+
+        public Account(double balance, Client owner)
         {
             CurrentBalance = balance;
-            ID = id;
+            ID = idRandomiser.Next(0, 1000);
+            Owner = owner;
         }
 
         public void AddMoney(double moneyAmount)
