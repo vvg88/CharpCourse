@@ -9,7 +9,6 @@ namespace HomeWork7
     class Person
     {
         public string Name { get; }
-
         public string Surname { get; }
 
         public Person (string name, string surname)

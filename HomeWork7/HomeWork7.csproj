@@ -62,6 +62,7 @@
     <Compile Include="Bank.cs" />
     <Compile Include="Client.cs" />
     <Compile Include="Employee.cs" />
+    <Compile Include="Enums.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Program.cs" />

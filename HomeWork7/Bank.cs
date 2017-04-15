@@ -36,31 +36,33 @@ namespace HomeWork7
                     outMessage = "Клиенту ничего не нужно.";
                     return false;
                 }
-                if (client.RequiredOperation.OperationType == OperationType.AddMoney || client.RequiredOperation.OperationType == OperationType.WithdrawMoney)
-                {
-                    var employee = employees.FirstOrDefault(staff => staff.AccessRight == OperationAccessRights.AddWithdraw && !staff.IsBusy);
-                    if (employee == null)
-                    {
-                        outMessage = "Все сотрудники в данный момент заняты!";
-                        return false;
-                    }
-                    return employee.ProvideService(client, out outMessage);
-                }
+                Employee employee;
+                if (client.RequiredOperation.OperationType == OperationType.CreateAccount || client.RequiredOperation.OperationType == OperationType.RemoveAccount)
+                    employee = employees.FirstOrDefault(staff => staff.AccessRight == OperationAccessRights.AddWithdrawCreateRemove && !staff.IsBusy);
                 else
+                    employee = employees.FirstOrDefault(staff => !staff.IsBusy);
+                
+                if (employee == null)
                 {
-
+                    outMessage = "Все сотрудники в данный момент заняты!";
+                    return false;
                 }
+                return employee.ProvideService(client, out outMessage);
             }
             else
             {
                 outMessage = "Банк закрыт!";
                 return false;
             }
-            throw new NotImplementedException();
         }
+
+        public void EmployWorker(Employee newEmployee)
+        {
+            employees.Add(newEmployee);
+        }
+
+        public IEnumerable<Account> GetClientAccounts(Client client) => from acc in accounts
+                                                                        where acc.Owner == client
+                                                                        select acc;
     }
-
-    enum OperationType { Nothing, AddMoney, WithdrawMoney, CreateAccount, RemoveAccount }
-
-    enum OperationAccessRights { AddWithdraw, AddWithdrawCreateRemove }
 }
