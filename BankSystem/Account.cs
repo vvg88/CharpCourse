@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWork7
+namespace BankSystem
 {
-    class Account
+    public class Account
     {
         public double CurrentBalance { get; private set; }
         public int ID { get; }

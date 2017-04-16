@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWork7
+namespace BankSystem
 {
-    class Operation
+    public class Operation
     {
         public Account Account { get; }
         public OperationType OperationType { get; } = OperationType.Nothing;

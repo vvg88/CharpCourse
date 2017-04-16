@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWork7
+namespace BankSystem
 {
-    class Bank
+    public class Bank
     {
         private List<Account> accounts = new List<Account> { };
         public IReadOnlyList<Account> Accounts

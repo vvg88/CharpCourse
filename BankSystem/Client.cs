@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWork7
+namespace BankSystem
 {
-    class Client : Person
+    public class Client : Person
     {
         public Operation RequiredOperation { get; set; } = new Operation(null, OperationType.Nothing, 0);
 

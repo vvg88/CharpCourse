@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWork7
+namespace BankSystem
 {
-    class Employee : Person
+    public class Employee : Person
     {
         public OperationAccessRights AccessRight { get; }
         public int ID { get; }

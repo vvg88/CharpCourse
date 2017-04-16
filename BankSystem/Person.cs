@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace HomeWork7
+namespace BankSystem
 {
-    class Person
+    public class Person
     {
         public string Name { get; }
         public string Surname { get; }
