@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Xml;
 
 namespace HomeWork8
 {
@@ -33,6 +34,29 @@ namespace HomeWork8
 
             AccountOperationRights = new ObservableCollection<OperationAccessRights>(Enum.GetValues(typeof(OperationAccessRights))
                                                                                          .Cast<OperationAccessRights>());
+
+
+            using (XmlWriter xmlWriter = XmlWriter.Create("clients.xml"))
+            {
+                xmlWriter.WriteStartDocument();
+                xmlWriter.WriteStartElement("Clients");
+                foreach (var client in clients)
+                {
+                    xmlWriter.WriteStartElement("Client");
+
+                    xmlWriter.WriteAttributeString(nameof(client.Name), client.Name);
+                    xmlWriter.WriteAttributeString(nameof(client.Surname), client.Surname);
+
+                    xmlWriter.WriteEndElement();
+                }
+                xmlWriter.WriteEndElement();
+                xmlWriter.WriteEndDocument();
+                xmlWriter.Flush();
+                xmlWriter.Close();
+            }
+
+            XmlDocument xmlDoc = new XmlDocument();
+            xmlDoc.Load("clients.xml");
         }
 
         public void AddNewEmployee()

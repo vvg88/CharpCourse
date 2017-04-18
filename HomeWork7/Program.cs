@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace HomeWork7
 {
@@ -22,11 +23,11 @@ namespace HomeWork7
 
             List<Client> clients = new List<Client>
             {
-                new Client("Иванов", "Иван") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 1000) },
-                new Client("Петров", "Петр") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 5000) },
-                new Client("Сидоров", "Авраам") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 3000) },
-                new Client("Иванова", "Алла") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 6000) },
-                new Client("Петрова", "Мария") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 10000) },
+                new Client("Иван", "Иванов") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 1000) },
+                new Client("Петр", "Петров") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 5000) },
+                new Client("Авраам", "Сидоров") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 3000) },
+                new Client("Алла", "Иванова") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 6000) },
+                new Client("Мария", "Петрова") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 10000) },
             };
 
             Action<Client> showService = (client) =>
@@ -36,7 +37,7 @@ namespace HomeWork7
                 serviceResult = yourFinance.ProvideService(client, out outMessage);
                 Console.WriteLine($"Клиент {client.Surname} {client.Name} {(serviceResult ? "обслужен" : "не обслужен")}\n" + outMessage);
             };
-
+                
             // Продемонстрировать закрытый банк
             Bank.CurrentTime = DateTime.Today;
             showService(clients[0]);
