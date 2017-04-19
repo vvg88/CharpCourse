@@ -72,6 +72,7 @@
   <ItemGroup>
     <Compile Include="OperationAccessRightEnumConverter.cs" />
     <Compile Include="OperationAccessRightToConverter.cs" />
+    <Compile Include="OperationWithAccount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -34,5 +34,10 @@ namespace HomeWork8
         {
             bsViewModel.AddNewEmployee();
         }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }
