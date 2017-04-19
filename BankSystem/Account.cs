@@ -35,5 +35,10 @@ namespace BankSystem
             }
             return false;
         }
+
+        public override string ToString()
+        {
+            return $"Account ID: {ID}";
+        }
     }
 }

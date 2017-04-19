@@ -37,7 +37,7 @@ namespace HomeWork8
 
         private void Button_Click(object sender, RoutedEventArgs e)
         {
-
+            bsViewModel.ServiceClient();
         }
     }
 }
