@@ -10,14 +10,14 @@ using System.Threading.Tasks;
 
 namespace HomeWork8
 {
-    class OperationWithAccount : Operation
-    {
-        public OperationWithAccount(Account account, OperationType opType, double moneyAmount) : base (account, opType, moneyAmount)
-        {
-            OperationTypes = new ObservableCollection<OperationType>(Enum.GetValues(typeof(OperationType))
-                                                                         .Cast<OperationType>());
-        }
+    //class OperationWithAccount : Operation
+    //{
+    //    public OperationWithAccount(Account account, OperationType opType, double moneyAmount) : base (account, opType, moneyAmount)
+    //    {
+    //        OperationTypes = new ObservableCollection<OperationType>(Enum.GetValues(typeof(OperationType))
+    //                                                                     .Cast<OperationType>());
+    //    }
 
-        public ObservableCollection<OperationType> OperationTypes { get; }
-    }
+    //    public ObservableCollection<OperationType> OperationTypes { get; }
+    //}
 }

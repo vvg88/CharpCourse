@@ -10,17 +10,18 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Xml;
+using System.Windows.Input;
 
 namespace HomeWork8
 {
-    class BankSystemViewModel : INotifyPropertyChanged
+    public class BankSystemViewModel : INotifyPropertyChanged
     {
         private Bank someBank;
 
         public ObservableCollection<Employee> Employees { get; }
         public ObservableCollection<Client> Clients { get; } = new ObservableCollection<Client>();
 
-        public ObservableCollection<OperationAccessRights> AccountOperationRights { get; }
+        public ObservableCollection<OperationType> AccountOperationRights { get; }
         private OperationType[] operationTypes;
         public OperationType[] OperationTypes
         {
@@ -34,7 +35,7 @@ namespace HomeWork8
 
         public string NewEmployeeName { get; set; }
         public string NewEmployeeSurname { get; set; }
-        public OperationAccessRights NewEmplAccessRight { get; set; }
+        public OperationType NewEmplAccessRight { get; set; }
         public OperationType CurrentOperationType { get; set; }
         public Account SelectedAccount { get; set; }
 
@@ -62,7 +63,7 @@ namespace HomeWork8
             set
             {
                 selectedClient = value;
-                var clientAccounts = someBank.GetClientAccounts(selectedClient);
+                var clientAccounts = selectedClient.Accounts;
                 SelectedClientAccounts = clientAccounts?.ToArray();
             }
         }
@@ -83,24 +84,24 @@ namespace HomeWork8
         public BankSystemViewModel()
         {
             someBank = new Bank();
-            someBank.EmployWorker(new Employee("Иван", "Иванов", OperationAccessRights.AddWithdraw, someBank));
-            someBank.EmployWorker(new Employee("Петр", "Петров", OperationAccessRights.AddWithdraw, someBank));
-            someBank.EmployWorker(new Employee("Алексей", "Алексеев", OperationAccessRights.AddWithdrawCreateRemove, someBank));
+            someBank.EmployWorker(new Employee("Иван", "Иванов", OperationType.AddMoney | OperationType.WithdrawMoney, someBank));
+            someBank.EmployWorker(new Employee("Петр", "Петров", OperationType.AddMoney | OperationType.WithdrawMoney | OperationType.CreateAccount, someBank));
+            someBank.EmployWorker(new Employee("Алексей", "Алексеев", OperationType.AddMoney | OperationType.WithdrawMoney | OperationType.CreateAccount | OperationType.RemoveAccount, someBank));
             Employees = new ObservableCollection<Employee>(someBank.Employees);
 
-            AccountOperationRights = new ObservableCollection<OperationAccessRights>(Enum.GetValues(typeof(OperationAccessRights))
-                                                                                         .Cast<OperationAccessRights>());
+            AccountOperationRights = new ObservableCollection<OperationType>(Enum.GetValues(typeof(OperationType))
+                                                                                         .Cast<OperationType>());
             OperationTypes = Enum.GetValues(typeof(OperationType)).Cast<OperationType>().ToArray();
 
             if (!File.Exists("clients.xml"))
             {
                 List<Client> clients = new List<Client>
                 {
-                    new Client("Иван", "Иванов") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 1000) },
-                    new Client("Петр", "Петров") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 5000) },
-                    new Client("Авраам", "Сидоров") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 3000) },
-                    new Client("Алла", "Иванова") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 6000) },
-                    new Client("Мария", "Петрова") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 10000) },
+                    new Client("Иван", "Иванов", someBank),
+                    new Client("Петр", "Петров", someBank),
+                    new Client("Авраам", "Сидоров", someBank),
+                    new Client("Алла", "Иванова", someBank),
+                    new Client("Мария", "Петрова", someBank),
                 };
                 using (XmlWriter xmlWriter = XmlWriter.Create("clients.xml"))
                 {
@@ -128,8 +129,7 @@ namespace HomeWork8
             var xmlNodeClients = xmlDoc.ChildNodes[1];
             foreach (XmlNode clientNode in xmlNodeClients.ChildNodes)
             {
-                Clients.Add(new Client(clientNode.Attributes["Name"].InnerText, clientNode.Attributes["Surname"].InnerText)
-                                      { RequiredOperation = new OperationWithAccount(null, OperationType.Nothing, 0) });
+                Clients.Add(new Client(clientNode.Attributes["Name"].InnerText, clientNode.Attributes["Surname"].InnerText, someBank));
             }
             Bank.CurrentTime = Bank.CurrentTime.AddHours(9);
         }
@@ -146,9 +146,9 @@ namespace HomeWork8
             var serviceMsg = string.Empty;
             if (SelectedClient != null)
             {
-                SelectedClient.RequiredOperation = new Operation(SelectedAccount, CurrentOperationType, SelectedClient.RequiredOperation.MoneyAmount);
+                Operation reqOper = new CreateAccountOperation(SelectedAccount);
                 string srvMsg;
-                var serviceResult = someBank.ProvideService(SelectedClient, out srvMsg);
+                var serviceResult = someBank.ProvideService(reqOper, out srvMsg);
                 serviceMsg = $"Клиент {SelectedClient.Surname} {SelectedClient.Name} {(serviceResult ? "обслужен" : "не обслужен")}\n" + srvMsg;
             }
             ServiceMessages = serviceMsg;
@@ -157,6 +157,17 @@ namespace HomeWork8
         private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public RoutedCommand AddNewEmployeeCommand { get; set; } = new RoutedCommand();
+        public void ExecutedAddNewEmployee(object sender, ExecutedRoutedEventArgs e)
+        {
+            ;
+        }
+
+        public void CanExecuteAddNewEmployee(object sender, CanExecuteRoutedEventArgs e)
+        {
+            e.CanExecute = Employees != null;
         }
     }
 }
