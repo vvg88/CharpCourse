@@ -9,7 +9,7 @@ namespace BankSystem
     public class Bank
     {
         private List<Account> accounts = new List<Account> { };
-        public IReadOnlyList<Account> Accounts
+        public IList<Account> Accounts
         {
             get { return accounts; }
         }
@@ -27,27 +27,18 @@ namespace BankSystem
 
         public static DateTime CurrentTime { get; set; }
 
-        public bool ProvideService(Client client, out string outMessage)
+        public bool ProvideService(Operation requiredOperation, out string outMessage)
         {
             if (IsOpen)
             {
-                if (client.RequiredOperation.OperationType == OperationType.Nothing)
-                {
-                    outMessage = "Клиенту ничего не нужно.";
-                    return false;
-                }
-                Employee employee;
-                if (client.RequiredOperation.OperationType == OperationType.CreateAccount || client.RequiredOperation.OperationType == OperationType.RemoveAccount)
-                    employee = employees.FirstOrDefault(staff => staff.AccessRight == OperationAccessRights.AddWithdrawCreateRemove && !staff.IsBusy);
-                else
-                    employee = employees.FirstOrDefault(staff => !staff.IsBusy);
+                Employee employee = GetFreeEmployee(requiredOperation);
                 
                 if (employee == null)
                 {
                     outMessage = "Все сотрудники в данный момент заняты!";
                     return false;
                 }
-                return employee.ProvideService(client, out outMessage);
+                return employee.ProvideService(requiredOperation, out outMessage);
             }
             else
             {
@@ -56,13 +47,14 @@ namespace BankSystem
             }
         }
 
+        private Employee GetFreeEmployee(Operation requiredOp)
+        {
+            return employees.FirstOrDefault(staff => staff.CheckAccessibility(requiredOp));
+        }
+
         public void EmployWorker(Employee newEmployee)
         {
             employees.Add(newEmployee);
         }
-
-        public IEnumerable<Account> GetClientAccounts(Client client) => from acc in accounts
-                                                                        where acc.Owner == client
-                                                                        select acc;
     }
 }

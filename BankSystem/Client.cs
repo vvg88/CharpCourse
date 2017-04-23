@@ -8,9 +8,21 @@ namespace BankSystem
 {
     public class Client : Person
     {
-        public Operation RequiredOperation { get; set; } = new Operation(null, OperationType.Nothing, 0);
+        public Bank BankServiceProvider { get; }
 
-        public Client(string name, string surname) : base(name, surname)
-        { }
+        public Client(string name, string surname, Bank bankServiceProvider) : base(name, surname)
+        {
+            BankServiceProvider = bankServiceProvider;
+        }
+
+        public IEnumerable<Account> Accounts
+        {
+            get
+            {
+                return from acc in BankServiceProvider.Accounts
+                       where acc.Owner == this
+                       select acc;
+            }
+        }
     }
 }

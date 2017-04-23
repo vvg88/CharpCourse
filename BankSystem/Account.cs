@@ -9,15 +9,13 @@ namespace BankSystem
     public class Account
     {
         public double CurrentBalance { get; private set; }
-        public int ID { get; }
+        public Guid ID { get; }
         public Client Owner { get; }
-
-        private static Random idRandomiser = new Random();
 
         public Account(double balance, Client owner)
         {
             CurrentBalance = balance;
-            ID = idRandomiser.Next(0, 1000);
+            ID = Guid.NewGuid();
             Owner = owner;
         }
 

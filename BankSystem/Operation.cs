@@ -7,17 +7,35 @@ using System.Threading.Tasks;
 
 namespace BankSystem
 {
-    public class Operation
+    public abstract class Operation
     {
         public Account Account { get; }
-        public OperationType OperationType { get; set; } = OperationType.Nothing;
-        public double MoneyAmount { get; set; }
+        public OperationType OperationType { get; } = OperationType.Nothing;
+        public double MoneyAmount { get; }
 
-        public Operation(Account account, OperationType opType, double moneyAmount)
+        protected Operation(Account account, OperationType opType, double moneyAmount)
         {
             Account = account;
             OperationType = opType;
             MoneyAmount = moneyAmount;
         }
+
+        public bool RunOperation(Employee responsibleEmployee, out string outMsg)
+        {
+            if (CheckOperationAccesRight(responsibleEmployee))
+            {
+                return RunReqiuredOperation(responsibleEmployee, out outMsg);
+            }
+            else
+            {
+                outMsg = $"Сотрудник {responsibleEmployee.Name} {responsibleEmployee.Surname} не имеет прав для выполнения данной операции!";
+                return false;
+            }
+        }
+
+        protected abstract bool RunReqiuredOperation(Employee responsibleEmployee, out string outMsg);
+
+        protected virtual bool CheckOperationAccesRight(Employee responsibleEmployee)
+            => (responsibleEmployee.AccessRight & OperationType) == OperationType;
     }
 }

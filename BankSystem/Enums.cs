@@ -6,7 +6,13 @@ using System.Threading.Tasks;
 
 namespace BankSystem
 {
-    public enum OperationType { Nothing, AddMoney, WithdrawMoney, CreateAccount, RemoveAccount }
-
-    public enum OperationAccessRights { AddWithdraw, AddWithdrawCreateRemove }
+    [Flags]
+    public enum OperationType
+    {
+        Nothing,
+        AddMoney,
+        WithdrawMoney = 2,
+        CreateAccount = 4,
+        RemoveAccount = 8
+    }
 }

@@ -15,67 +15,67 @@ namespace HomeWork7
         {
             Bank yourFinance = new Bank();
 
-            yourFinance.EmployWorker(new Employee("Стукачев", "Станислав", OperationAccessRights.AddWithdraw, yourFinance));
-            yourFinance.EmployWorker(new Employee("Куклачев", "Юрий", OperationAccessRights.AddWithdraw, yourFinance));
-            yourFinance.EmployWorker(new Employee("Пугачев", "Виталий", OperationAccessRights.AddWithdrawCreateRemove, yourFinance));
-            yourFinance.EmployWorker(new Employee("Калачев", "Сигизмунд", OperationAccessRights.AddWithdrawCreateRemove, yourFinance));
-            yourFinance.EmployWorker(new Employee("Деревянкин", "Денис", OperationAccessRights.AddWithdrawCreateRemove, yourFinance));
+            yourFinance.EmployWorker(new Employee("Стукачев", "Станислав", OperationType.Nothing, yourFinance));
+            yourFinance.EmployWorker(new Employee("Куклачев", "Юрий", OperationType.AddMoney | OperationType.WithdrawMoney, yourFinance));
+            yourFinance.EmployWorker(new Employee("Пугачев", "Виталий", OperationType.AddMoney | OperationType.WithdrawMoney, yourFinance));
+            yourFinance.EmployWorker(new Employee("Калачев", "Сигизмунд", OperationType.AddMoney | OperationType.WithdrawMoney | OperationType.CreateAccount, yourFinance));
+            yourFinance.EmployWorker(new Employee("Деревянкин", "Денис", OperationType.AddMoney | OperationType.WithdrawMoney | OperationType.CreateAccount | OperationType.RemoveAccount, yourFinance));
 
             List<Client> clients = new List<Client>
             {
-                new Client("Иван", "Иванов") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 1000) },
-                new Client("Петр", "Петров") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 5000) },
-                new Client("Авраам", "Сидоров") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 3000) },
-                new Client("Алла", "Иванова") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 6000) },
-                new Client("Мария", "Петрова") { RequiredOperation = new Operation(null, OperationType.CreateAccount, 10000) },
+                new Client("Иван", "Иванов", yourFinance),
+                new Client("Петр", "Петров", yourFinance),
+                new Client("Авраам", "Сидоров", yourFinance),
+                new Client("Алла", "Иванова", yourFinance),
+                new Client("Мария", "Петрова", yourFinance),
             };
 
-            Action<Client> showService = (client) =>
+            Action<Client, Operation> showService = (client, operation) =>
             {
                 string outMessage = string.Empty;
                 bool serviceResult = false;
-                serviceResult = yourFinance.ProvideService(client, out outMessage);
+                serviceResult = yourFinance.ProvideService(operation, out outMessage);
                 Console.WriteLine($"Клиент {client.Surname} {client.Name} {(serviceResult ? "обслужен" : "не обслужен")}\n" + outMessage);
             };
-                
+
             // Продемонстрировать закрытый банк
+            Operation reqOper = new CreateAccountOperation(new Account(0, clients[0]));
             Bank.CurrentTime = DateTime.Today;
-            showService(clients[0]);
+            showService(clients[0], reqOper);
             Console.WriteLine();
 
             // Продемонстрировать занятых сотрудников
             Bank.CurrentTime = Bank.CurrentTime.AddHours(9);
             foreach (var client in clients)
             {
-                showService(client);
+                showService(client, new CreateAccountOperation(new Account(0, client)));
             }
             Console.WriteLine();
 
             // Сотрудники должны освободиться
-            Thread.Sleep(1500);
-            showService(clients[3]);
-            showService(clients[4]);
+            Thread.Sleep(1100);
+            showService(clients[2], new CreateAccountOperation(new Account(0, clients[2])));
+            showService(clients[3], new CreateAccountOperation(new Account(0, clients[3])));
+            Thread.Sleep(1100);
+            showService(clients[4], new CreateAccountOperation(new Account(0, clients[4])));
             Console.WriteLine();
 
             // Продемонстрировать прочие операции со счетами
-            clients[0].RequiredOperation = new Operation(yourFinance.GetClientAccounts(clients[0]).ElementAt(0), OperationType.AddMoney, 500);
-            showService(clients[0]);
+            reqOper = new AddMoneyOperation(clients[0].Accounts.ElementAt(0), 500);
+            showService(clients[0], reqOper);
             Console.WriteLine();
 
-            clients[1].RequiredOperation = new Operation(yourFinance.GetClientAccounts(clients[1]).ElementAt(0), OperationType.WithdrawMoney, 500);
-            showService(clients[1]);
+            reqOper = new WithdrawMoneyOperation(clients[1].Accounts.ElementAt(0), 500);
+            showService(clients[1], reqOper);
             Console.WriteLine();
 
-            clients[2].RequiredOperation = new Operation(null, OperationType.CreateAccount, 500);
-            showService(clients[2]);
+            reqOper = new CreateAccountOperation(new Account(1000, clients[2]));
+            showService(clients[2], reqOper);
             Console.WriteLine();
 
-            clients[3].RequiredOperation = new Operation(yourFinance.GetClientAccounts(clients[3]).ElementAt(0), OperationType.CreateAccount, 5000);
-            showService(clients[3]);
-            Console.WriteLine();
-
-            clients[4].RequiredOperation = new Operation(yourFinance.GetClientAccounts(clients[4]).ElementAt(0), OperationType.Nothing, 500);
-            showService(clients[4]);
+            Thread.Sleep(1100);
+            reqOper = new RemoveAccountOperation(clients[3].Accounts.ElementAt(0));
+            showService(clients[3], reqOper);
             Console.WriteLine();
 
             Console.Read();
