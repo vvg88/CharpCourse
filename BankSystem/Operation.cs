@@ -11,13 +11,11 @@ namespace BankSystem
     {
         public Account Account { get; }
         public OperationType OperationType { get; } = OperationType.Nothing;
-        public double MoneyAmount { get; }
-
-        protected Operation(Account account, OperationType opType, double moneyAmount)
+        
+        protected Operation(Account account, OperationType opType)
         {
             Account = account;
             OperationType = opType;
-            MoneyAmount = moneyAmount;
         }
 
         public bool RunOperation(Employee responsibleEmployee, out string outMsg)

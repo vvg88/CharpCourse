@@ -8,8 +8,8 @@ namespace BankSystem
 {
     public class CreateAccountOperation : Operation
     {
-        public CreateAccountOperation(Account account, double moneyAmount = 0)
-            : base(account, OperationType.CreateAccount, moneyAmount)
+        public CreateAccountOperation(Account account)
+            : base(account, OperationType.CreateAccount)
         { }
 
         protected override bool RunReqiuredOperation(Employee responsibleEmployee, out string outMsg)

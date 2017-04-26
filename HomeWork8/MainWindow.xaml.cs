@@ -29,7 +29,7 @@ namespace HomeWork8
             bsViewModel = new BankSystemViewModel();
             DataContext = bsViewModel;
 
-            CommandBinding addNewEmployeeCommBind = new CommandBinding(bsViewModel.AddNewEmployeeCommand,
+            CommandBinding addNewEmployeeCommBind = new CommandBinding(Commands.AddNewEmployee,
                                                                        bsViewModel.ExecutedAddNewEmployee,
                                                                        bsViewModel.CanExecuteAddNewEmployee);
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace BankSystem
 {
-    public class AddMoneyOperation : Operation
+    public class AddMoneyOperation : MoneyOperation
     {
         public AddMoneyOperation(Account account, double moneyAmount)
             : base(account, OperationType.AddMoney, moneyAmount)

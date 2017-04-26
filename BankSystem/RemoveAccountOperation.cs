@@ -8,8 +8,8 @@ namespace BankSystem
 {
     public class RemoveAccountOperation : Operation
     {
-        public RemoveAccountOperation(Account account, double moneyAmount = 0)
-            : base(account, OperationType.RemoveAccount, moneyAmount)
+        public RemoveAccountOperation(Account account)
+            : base(account, OperationType.RemoveAccount)
         { }
 
         protected override bool RunReqiuredOperation(Employee responsibleEmployee, out string outMsg)

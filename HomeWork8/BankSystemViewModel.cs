@@ -159,7 +159,7 @@ namespace HomeWork8
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        public RoutedCommand AddNewEmployeeCommand { get; set; } = new RoutedCommand();
+        //public RoutedCommand AddNewEmployeeCommand { get; set; } = new RoutedCommand();
         public void ExecutedAddNewEmployee(object sender, ExecutedRoutedEventArgs e)
         {
             ;

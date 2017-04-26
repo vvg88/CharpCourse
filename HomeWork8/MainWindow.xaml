@@ -17,11 +17,10 @@
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </Window.Resources>
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="{x:Static local}"
-                        Executed="ExecutedAddNewEmployee"
-                        CanExecute="CanExecuteAddNewEmployee"/>
-    </Window.CommandBindings>-->
+    <Window.CommandBindings>
+        <CommandBinding Command="{x:Static local:Commands.AddNewEmployee}"
+                        Executed="ExecutedAddNewEmployee"/>
+    </Window.CommandBindings>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition/>
@@ -57,7 +56,8 @@
                               ItemsSource="{Binding AccountOperationRights}"
                               SelectedItem="{Binding NewEmplAccessRight}"/>
                     <Button Margin="5,5,5,5" Grid.Column="3" Name="buttAddNewEmployee"
-                            Content="Добавить" Click="buttAddNewEmployee_Click"/>
+                            Content="Добавить"
+                            Command="{x:Static local:Commands.AddNewEmployee}"/><!--Click="buttAddNewEmployee_Click"-->
                 </Grid>
             </Grid>
         </GroupBox>
