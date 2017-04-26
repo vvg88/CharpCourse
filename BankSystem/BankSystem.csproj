@@ -47,6 +47,7 @@
     <Compile Include="CreateAccountOperation.cs" />
     <Compile Include="Employee.cs" />
     <Compile Include="Enums.cs" />
+    <Compile Include="MoneyOperation.cs" />
     <Compile Include="Operation.cs" />
     <Compile Include="Person.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
