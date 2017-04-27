@@ -89,8 +89,8 @@ namespace HomeWork8
             someBank.EmployWorker(new Employee("Алексей", "Алексеев", OperationType.AddMoney | OperationType.WithdrawMoney | OperationType.CreateAccount | OperationType.RemoveAccount, someBank));
             Employees = new ObservableCollection<Employee>(someBank.Employees);
 
-            AccountOperationRights = new ObservableCollection<OperationType>(Enum.GetValues(typeof(OperationType))
-                                                                                         .Cast<OperationType>());
+            AccountOperationRights = new ObservableCollection<OperationType> { 0 }; /*(Enum.GetValues(typeof(OperationType))
+                                                                                         .Cast<OperationType>());*/
             OperationTypes = Enum.GetValues(typeof(OperationType)).Cast<OperationType>().ToArray();
 
             if (!File.Exists("clients.xml"))
