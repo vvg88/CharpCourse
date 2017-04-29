@@ -11,9 +11,12 @@ namespace HomeWork8
     {
         public static RoutedCommand AddNewEmployee { get; }
 
+        public static RoutedCommand ServiceClient { get; }
+
         static Commands()
         {
             AddNewEmployee = new RoutedCommand("AddNewEmployee", typeof(Commands));
+            ServiceClient = new RoutedCommand("ServiceClient", typeof(Commands));
         }
     }
 }

@@ -21,7 +21,7 @@ namespace HomeWork8
         public ObservableCollection<Employee> Employees { get; }
         public ObservableCollection<Client> Clients { get; } = new ObservableCollection<Client>();
 
-        public ObservableCollection<OperationType> AccountOperationRights { get; }
+        public ObservableCollection<AccessRightItem> AccountOperationRights { get; }
         private OperationType[] operationTypes;
         public OperationType[] OperationTypes
         {
@@ -39,10 +39,8 @@ namespace HomeWork8
         public OperationType CurrentOperationType { get; set; }
         public Account SelectedAccount { get; set; }
 
-        private string serviceMessages;
-
         public event PropertyChangedEventHandler PropertyChanged;
-
+        private string serviceMessages;
         public string ServiceMessages
         {
             get { return serviceMessages; }
@@ -80,6 +78,7 @@ namespace HomeWork8
             }
         }
 
+        public double MoneyAmount { get; set; }
 
         public BankSystemViewModel()
         {
@@ -89,8 +88,13 @@ namespace HomeWork8
             someBank.EmployWorker(new Employee("Алексей", "Алексеев", OperationType.AddMoney | OperationType.WithdrawMoney | OperationType.CreateAccount | OperationType.RemoveAccount, someBank));
             Employees = new ObservableCollection<Employee>(someBank.Employees);
 
-            AccountOperationRights = new ObservableCollection<OperationType> { 0 }; /*(Enum.GetValues(typeof(OperationType))
-                                                                                         .Cast<OperationType>());*/
+            AccountOperationRights = new ObservableCollection<AccessRightItem>
+            {
+                new AccessRightItem(OperationType.AddMoney),
+                new AccessRightItem(OperationType.WithdrawMoney),
+                new AccessRightItem(OperationType.CreateAccount),
+                new AccessRightItem(OperationType.RemoveAccount),
+            };
             OperationTypes = Enum.GetValues(typeof(OperationType)).Cast<OperationType>().ToArray();
 
             if (!File.Exists("clients.xml"))
@@ -110,10 +114,8 @@ namespace HomeWork8
                     foreach (var client in clients)
                     {
                         xmlWriter.WriteStartElement("Client");
-
                         xmlWriter.WriteAttributeString(nameof(client.Name), client.Name);
                         xmlWriter.WriteAttributeString(nameof(client.Surname), client.Surname);
-
                         xmlWriter.WriteEndElement();
                     }
                     xmlWriter.WriteEndElement();
@@ -125,7 +127,6 @@ namespace HomeWork8
 
             XmlDocument xmlDoc = new XmlDocument();
             xmlDoc.Load("clients.xml");
-
             var xmlNodeClients = xmlDoc.ChildNodes[1];
             foreach (XmlNode clientNode in xmlNodeClients.ChildNodes)
             {
@@ -134,40 +135,58 @@ namespace HomeWork8
             Bank.CurrentTime = Bank.CurrentTime.AddHours(9);
         }
 
-        public void AddNewEmployee()
-        {
-            var newBee = new Employee(NewEmployeeName, NewEmployeeSurname, NewEmplAccessRight, someBank);
-            Employees.Add(newBee);
-            someBank.EmployWorker(newBee);
-        }
-
-        public void ServiceClient()
-        {
-            var serviceMsg = string.Empty;
-            if (SelectedClient != null)
-            {
-                Operation reqOper = new CreateAccountOperation(SelectedAccount);
-                string srvMsg;
-                var serviceResult = someBank.ProvideService(reqOper, out srvMsg);
-                serviceMsg = $"Клиент {SelectedClient.Surname} {SelectedClient.Name} {(serviceResult ? "обслужен" : "не обслужен")}\n" + srvMsg;
-            }
-            ServiceMessages = serviceMsg;
-        }
-
-        private void NotifyPropertyChanged([CallerMemberName] String propertyName = "")
+        private void NotifyPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
 
-        //public RoutedCommand AddNewEmployeeCommand { get; set; } = new RoutedCommand();
         public void ExecutedAddNewEmployee(object sender, ExecutedRoutedEventArgs e)
         {
-            ;
+            if (string.IsNullOrEmpty(NewEmployeeName) || string.IsNullOrEmpty(NewEmployeeSurname))
+            {
+                MessageBox.Show("Введите данные сотрудника!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            var newBee = new Employee(NewEmployeeName, NewEmployeeSurname, AccessRightItem.OperationAccessRight, someBank);
+            Employees.Add(newBee);
+            someBank.EmployWorker(newBee);
         }
 
-        public void CanExecuteAddNewEmployee(object sender, CanExecuteRoutedEventArgs e)
+        public void ExecutedServiceClient(object sender, ExecutedRoutedEventArgs e)
         {
-            e.CanExecute = Employees != null;
+            if (SelectedClient == null)
+            {
+                MessageBox.Show("Клиент не выбран!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            if (SelectedAccount == null && (CurrentOperationType != OperationType.CreateAccount))
+            {
+                MessageBox.Show("Счет не выбран!", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            var serviceMsg = string.Empty;
+            Operation reqOper;
+            switch (CurrentOperationType)
+            {
+                case OperationType.AddMoney:
+                    reqOper = new AddMoneyOperation(SelectedAccount, MoneyAmount);
+                    break;
+                case OperationType.WithdrawMoney:
+                    reqOper = new WithdrawMoneyOperation(SelectedAccount, MoneyAmount);
+                    break;
+                case OperationType.CreateAccount:
+                    reqOper = new CreateAccountOperation(new Account(MoneyAmount, SelectedClient));
+                    break;
+                case OperationType.RemoveAccount:
+                    reqOper = new RemoveAccountOperation(SelectedAccount);
+                    break;
+                default:
+                    return;
+            }
+            string srvMsg;
+            var serviceResult = someBank.ProvideService(reqOper, out srvMsg);
+            serviceMsg = $"Клиент {SelectedClient.Surname} {SelectedClient.Name} {(serviceResult ? "обслужен" : "не обслужен")}\n" + srvMsg;
+            ServiceMessages = serviceMsg;
         }
     }
 }

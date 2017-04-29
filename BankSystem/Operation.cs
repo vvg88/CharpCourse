@@ -20,7 +20,7 @@ namespace BankSystem
 
         public bool RunOperation(Employee responsibleEmployee, out string outMsg)
         {
-            if (CheckOperationAccesRight(responsibleEmployee))
+            if (responsibleEmployee.AccessRight.HasFlag(OperationType))
             {
                 return RunReqiuredOperation(responsibleEmployee, out outMsg);
             }
@@ -32,8 +32,5 @@ namespace BankSystem
         }
 
         protected abstract bool RunReqiuredOperation(Employee responsibleEmployee, out string outMsg);
-
-        protected virtual bool CheckOperationAccesRight(Employee responsibleEmployee)
-            => (responsibleEmployee.AccessRight & OperationType) == OperationType;
     }
 }

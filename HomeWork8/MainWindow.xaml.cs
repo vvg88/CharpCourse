@@ -30,20 +30,9 @@ namespace HomeWork8
             DataContext = bsViewModel;
 
             CommandBinding addNewEmployeeCommBind = new CommandBinding(Commands.AddNewEmployee,
-                                                                       bsViewModel.ExecutedAddNewEmployee,
-                                                                       bsViewModel.CanExecuteAddNewEmployee);
-
+                                                                       bsViewModel.ExecutedAddNewEmployee);
             CommandBindings.Add(addNewEmployeeCommBind);
-        }
-
-        private void buttAddNewEmployee_Click(object sender, RoutedEventArgs e)
-        {
-            bsViewModel.AddNewEmployee();
-        }
-
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-            bsViewModel.ServiceClient();
+            CommandBindings.Add(new CommandBinding(Commands.ServiceClient, bsViewModel.ExecutedServiceClient));
         }
     }
 }
