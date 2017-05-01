@@ -6,12 +6,6 @@
         xmlns:local="clr-namespace:Pharmacy"
         mc:Ignorable="d"
         Title="Аптека" Height="350" Width="525">
-    <!--<Window.CommandBindings>
-        <CommandBinding Command="{x:Static local:Commands.FilteredNameChanged}"
-                        Executed="NameChanged_Executed"/>
-        <CommandBinding Command="{x:Static local:Commands.FilteredSymptomChanged}"
-                        Executed="SymptomChanged_Executed"/>
-    </Window.CommandBindings>-->
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
@@ -28,48 +22,21 @@
                 <Label Content="Показание к применению:"/>
                 <TextBox Text="{Binding InputedSymptomToUse, UpdateSourceTrigger=PropertyChanged}" Margin="5"/>
             </StackPanel>
-            <DataGrid Grid.Row="1" ItemsSource="{Binding Medicines}" Margin="5" AutoGenerateColumns="False">
+            <DataGrid Grid.Row="1" ItemsSource="{Binding Medicines}" SelectedItem="{Binding SelectedMedicine}"
+                      Margin="5" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="1*"/>
+                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="2*"/>
                     <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat={}{0} руб}" Width="1*"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <!--<ListBox Grid.Row="1" ItemsSource="{Binding Medicines}" Margin="5">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBox>
-                            <TextBox.Text>
-                                <MultiBinding StringFormat=" {0} : {1:C}">
-                                    <Binding Path="Name" Mode="OneWay"/>
-                                    <Binding Path="Price" Mode="OneWay"/>
-                                </MultiBinding>
-                            </TextBox.Text>
-                        </TextBox>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>-->
         </Grid>
         <GroupBox Header="Аналоги" Grid.Column="1">
-            <DataGrid Grid.Row="1" ItemsSource="{Binding AnalogMedicines}" Margin="5" AutoGenerateColumns="False">
+            <DataGrid Grid.Row="1" ItemsSource="{Binding AnalogueMedicines}" Margin="5" AutoGenerateColumns="False">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="1*"/>
+                    <DataGridTextColumn Header="Название" Binding="{Binding Name}" Width="2*"/>
                     <DataGridTextColumn Header="Цена" Binding="{Binding Price, StringFormat={}{0} руб}" Width="1*"/>
                 </DataGrid.Columns>
             </DataGrid>
-            <!--<ListBox ItemsSource="{Binding FilteredMedicines}">
-                <ListBox.ItemTemplate>
-                    <DataTemplate>
-                        <TextBox>
-                            <TextBox.Text>
-                                <MultiBinding StringFormat=" {0} : {1:C}">
-                                    <Binding Path="Name" Mode="OneWay"/>
-                                    <Binding Path="Price" Mode="OneWay"/>
-                                </MultiBinding>
-                            </TextBox.Text>
-                        </TextBox>
-                    </DataTemplate>
-                </ListBox.ItemTemplate>
-            </ListBox>-->
         </GroupBox>
     </Grid>
 </Window>

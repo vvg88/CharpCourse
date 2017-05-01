@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Pharmacy.BusinessLogic
 {
@@ -18,22 +16,45 @@ namespace Pharmacy.BusinessLogic
         public IEnumerable<Medicine> GetMedicinesByName(string name)
         {
             return from medicine in Medicines
-                   where IsStringContains(medicine.Name, name)
+                   where medicine.Name.ContainsIgnoreCase(name)
                    select medicine;
         }
 
         public IEnumerable<Medicine> GetMedicinesBySymptomsToUse(string symptome)
         {
-            return from medicine in Medicines
-                        from symptm in medicine.SymptomsToUse
-                        let isSympContained = IsStringContains(symptm, symptome)
-                   where isSympContained
-                   select medicine;
+            return Medicines.Where(medicine =>
+            {
+                bool isSympContained = false;
+                foreach (var symp in medicine.SymptomsToUse)
+                {
+                    if (isSympContained = symp.ContainsIgnoreCase(symptome))
+                    {
+                        break;
+                    }
+                }
+                return isSympContained;
+            });
         }
 
-        private bool IsStringContains(string stringValue, string containedString)
+        public IEnumerable<Medicine> GetAnalogues(Medicine medicine)
         {
-            return stringValue.IndexOf(containedString, StringComparison.CurrentCultureIgnoreCase) >= 0;
+            return Medicines.Where(someMedicine =>
+            {
+                if (medicine == someMedicine)
+                    return false;
+
+                var leastEqualSubsCount = Math.Round(medicine.ActiveSubstances.Count / 2.0, MidpointRounding.AwayFromZero);
+                var equalSubsCount = medicine.ActiveSubstances.Count(actSubstance =>
+                {
+                    foreach(var someActSubstance in someMedicine.ActiveSubstances)
+                    {
+                        if (actSubstance == someActSubstance)
+                            return true;
+                    }
+                    return false;
+                });
+                return equalSubsCount >= leastEqualSubsCount;
+            });
         }
     }
 }

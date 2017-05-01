@@ -66,13 +66,13 @@
     <Compile Include="BusinessLogic\Medicine.cs" />
     <Compile Include="BusinessLogic\Pharmacy.cs" />
     <Compile Include="BusinessLogic\PharmacyViewModel.cs" />
-    <Compile Include="Commands.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="PharmacyExtentions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
