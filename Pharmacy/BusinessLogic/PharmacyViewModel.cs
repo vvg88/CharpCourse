@@ -51,10 +51,7 @@ namespace Pharmacy.BusinessLogic
             set
             {
                 selectedMedicine = value;
-                if (selectedMedicine == null)
-                    AnalogueMedicines = null;
-                else
-                    AnalogueMedicines = pharmacy.GetAnalogues(selectedMedicine);
+                AnalogueMedicines = pharmacy.GetAnalogues(selectedMedicine);
             }
         }
 

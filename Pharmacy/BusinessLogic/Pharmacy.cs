@@ -22,28 +22,20 @@ namespace Pharmacy.BusinessLogic
 
         public IEnumerable<Medicine> GetMedicinesBySymptomsToUse(string symptome)
         {
-            return Medicines.Where(medicine =>
-            {
-                bool isSympContained = false;
-                foreach (var symp in medicine.SymptomsToUse)
-                {
-                    if (isSympContained = symp.ContainsIgnoreCase(symptome))
-                    {
-                        break;
-                    }
-                }
-                return isSympContained;
-            });
+            return Medicines.Where(medicine => medicine.SymptomsToUse.Any(symp => symp.ContainsIgnoreCase(symptome)));
         }
 
         public IEnumerable<Medicine> GetAnalogues(Medicine medicine)
         {
+            if (medicine == null)
+                return Array.Empty<Medicine>();
+
+            var leastEqualSubsCount = Math.Round(medicine.ActiveSubstances.Count / 2.0, MidpointRounding.AwayFromZero);
             return Medicines.Where(someMedicine =>
             {
                 if (medicine == someMedicine)
                     return false;
-
-                var leastEqualSubsCount = Math.Round(medicine.ActiveSubstances.Count / 2.0, MidpointRounding.AwayFromZero);
+                
                 var equalSubsCount = medicine.ActiveSubstances.Count(actSubstance =>
                 {
                     foreach(var someActSubstance in someMedicine.ActiveSubstances)

@@ -17,10 +17,5 @@ namespace Pharmacy.BusinessLogic
             ActiveSubstances = activeSubstances;
             SymptomsToUse = symptomsToUse;
         }
-
-        public void SetNewPrice(decimal newPrice)
-        {
-            Price = newPrice;
-        }
     }
 }
